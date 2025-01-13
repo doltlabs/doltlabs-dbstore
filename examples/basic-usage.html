@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Basic Usage - DoltStore</title>
+  <script src="../dist/doltstore.min.js"></script>
+</head>
+<body>
+
+  <h1>Basic Usage Example</h1>
+
+  <table id="todoTable" border="1">
+    <thead>
+      <tr>
+        <th>Task</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Rows will be added here dynamically -->
+    </tbody>
+  </table>
+
+  <input type="text" id="taskInput" placeholder="Enter a task">
+  <button onclick="addTask()">Add Task</button>
+
+  <script>
+    // Initialize DoltStore with the "tasks" schema
+    const taskDb = new DoltStore('tasks');
+
+    // Function to add a task
+    function addTask() {
+      const taskInput = document.getElementById('taskInput');
+      const task = taskInput.value.trim();
+      if (task) {
+        const taskId = Date.now().toString();
+        taskDb.save({ id: taskId, task });
+        addTaskToTable(taskId, task);
+        taskInput.value = '';
+      }
+    }
+
+    // Function to add a task to the table
+    function addTaskToTable(taskId, task) {
+      const tableBody = document.getElementById('todoTable').getElementsByTagName('tbody')[0];
+      const row = tableBody.insertRow();
+      row.setAttribute('data-task-id', taskId);
+
+      const cell1 = row.insertCell(0);
+      const cell2 = row.insertCell(1);
+
+      cell1.textContent = task;
+      cell2.innerHTML = '<button onclick="deleteTask(this)">Delete</button>';
+    }
+
+    // Function to delete a task
+    function deleteTask(button) {
+      const row = button.parentNode.parentNode;
+      const taskId = row.getAttribute('data-task-id');
+      taskDb.delete(taskId);
+      row.remove();
+    }
+
+    // Load existing tasks from DoltStore and display them
+    function loadTasks() {
+      const tasks = taskDb.getAll();
+      tasks.forEach(task => {
+        addTaskToTable(task.id, task.task);
+      });
+    }
+
+    // Load tasks when the page loads
+    window.onload = loadTasks;
+  </script>
+
+</body>
+</html>
