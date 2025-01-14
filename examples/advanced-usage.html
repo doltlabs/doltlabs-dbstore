@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Advanced Usage - DoltStore</title>
+  <script src="https://cdn.jsdelivr.net/npm/doltstore@1.0.0/dist/doltstore.js"></script>
+</head>
+<body>
+
+  <h1>Advanced Usage Example</h1>
+
+  <script>
+    // Initialize DoltStore for "users"
+    const userDb = new DoltStore('users');
+
+    // Save a new user
+    const user = {
+      username: 'jane_doe',
+      email: 'jane@example.com',
+      fullName: 'Jane Doe',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    const savedUser = userDb.save(user);
+
+    // Update the user
+    savedUser.fullName = 'Jane Smith';
+    userDb.update(savedUser.id, savedUser);
+
+    // Delete the user
+    userDb.delete(savedUser.id);
+
+    console.log('User deleted:', savedUser.id);
+  </script>
+
+</body>
+</html>
