@@ -1,6 +1,6 @@
-# DoltVault - Offline-First Key-Value Database
+# Dolt dbStore - Offline-First Key-Value Database
 
-**DoltVault** is a lightweight and powerful JavaScript library for building offline-first applications. It provides an easy-to-use key-value database wrapper that connects to the browser's `localStorage` and supports automatic ID generation based on JavaScript class schemas. This makes it easy to store and manage data, even when users are offline, and access it across sessions.
+**dbStore** is a lightweight and powerful JavaScript library for building offline-first applications. It provides an easy-to-use key-value database wrapper that connects to the browser's `localStorage` and supports automatic ID generation based on JavaScript class schemas. This makes it easy to store and manage data, even when users are offline, and access it across sessions.
 
 ### Features
 
@@ -16,15 +16,15 @@
 
 ### Using CDN
 
-You can include **DoltVault** in your project by adding the following `<script>` tag to your HTML file:
+You can include **dbStore** in your project by adding the following `<script>` tag to your HTML file:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/doltvault@1.0.0/dist/doltvault.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/doltdbStore@1.0.0/dist/doltdbStore.js"></script>
 ```
 
 ### Using npm
 
-To install **DoltVault** via npm, run:
+To install **dbStore** via npm, run:
 
 ```bash
 npm install doltvault
@@ -33,14 +33,14 @@ npm install doltvault
 Then, you can import it into your JavaScript project:
 
 ```javascript
-import DoltVault from 'doltvault';
+import DoltDbStore from 'doltdbStore';
 ```
 
 ---
 
 ## How It Works
 
-**DoltVault** interacts with the browser's `localStorage` to store data in a key-value format. It uses **JavaScript classes** to define the schema for your data and automatically generates a unique ID for each instance of that class when saved.
+**dbStore** interacts with the browser's `localStorage` to store data in a key-value format. It uses **JavaScript classes** to define the schema for your data and automatically generates a unique ID for each instance of that class when saved.
 
 ### Key Concepts
 
@@ -68,12 +68,12 @@ class User {
 }
 ```
 
-### 2. Initializing DoltVault
+### 2. Initializing dbStore
 
-Next, initialize **DoltVault** with a unique schema name. This will represent the storage collection for the data.
+Next, initialize **dbStore** with a unique schema name. This will represent the storage collection for the data.
 
 ```javascript
-const userDb = new DoltVault('users');
+const userDb = new DoltDbStore('users');
 ```
 
 ### 3. Saving Data
@@ -131,10 +131,10 @@ console.log(allUsers);
 
 ## API Reference
 
-### 1. **`DoltVault` Constructor**
+### 1. **`DoltDbStore` Constructor**
 
 ```javascript
-const db = new DoltVault(schemaName);
+const db = new DoltDbStore(schemaName);
 ```
 
 - **Parameters**:
@@ -209,7 +209,7 @@ const data = db.getAll();
 
 ### Storing More Complex Objects
 
-You can store more complex objects in **DoltVault** by defining multiple schema classes and using them together:
+You can store more complex objects in **DoltDbStore** by defining multiple schema classes and using them together:
 
 ```javascript
 class Post {
@@ -228,7 +228,7 @@ You can save and link a `Post` object to a `User` object:
 ```javascript
 const post = new Post('My First Post', 'This is the content of the post.', user);
 userDb.save(user);
-const postDb = new DoltVault('posts');
+const postDb = new DoltDbStore('posts');
 postDb.save(post);
 ```
 
@@ -242,4 +242,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-For support, please feel free to open an issue on our [GitHub Issues Page](https://github.com/DoltLabs/doltvault/issues) or reach out via email at **support@doltlabs.in**.
+For support, please feel free to open an issue on our [GitHub Issues Page]([https://github.com/DoltLabs/doltvault](https://github.com/doltlabs/dolt-dbstore/issues) or reach out via email at **contactus@doltlabs.in**.
