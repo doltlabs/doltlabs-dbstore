@@ -1,4 +1,4 @@
-# Dolt dbStore - Offline-First Key-Value Database
+# Dolt Labs dbStore - Offline-First Key-Value Database Wrapper
 
 **dbStore** is a lightweight and powerful JavaScript library for building offline-first applications. It provides an easy-to-use key-value database wrapper that connects to the browser's `localStorage` and supports automatic ID generation based on JavaScript class schemas. This makes it easy to store and manage data, even when users are offline, and access it across sessions.
 
