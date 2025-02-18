@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Advanced Usage - DoltStore</title>
-  <script src="https://cdn.jsdelivr.net/npm/doltstore@1.0.0/dist/doltstore.js"></script>
+  <script src="../dist/doltlabs-dbstore.js"></script>
 </head>
 <body>
 
@@ -11,7 +11,7 @@
 
   <script>
     // Initialize DoltStore for "users"
-    const userDb = new DoltStore('users');
+    const userDb = new DoltDBStore('users');
 
     // Save a new user
     const user = {

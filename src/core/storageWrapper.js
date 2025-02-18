@@ -17,12 +17,18 @@ class StorageWrapper {
    */
   save(data) {
     const storedData = this.getAll() || [];
-    const entry = { ...data, id: data.id || generateId() };
-    storedData.push(entry);
 
+    // Ensure the entry always has a unique ID
+    const entry = { ...data, id: data.id ?? generateId() };
+
+    storedData.push(entry);
     localStorage.setItem(this.storageKey, serialize(storedData));
+
     return entry;
   }
+
+
+
 
   /**
    * Retrieves a data entry by its ID

@@ -1,7 +1,6 @@
-import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
 import { execSync } from 'child_process';
-import { readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 
 // Function to generate version number
@@ -23,8 +22,8 @@ function updateHeaderAndRename() {
       const ext = path.extname(originalFileName);
       const baseName = path.basename(originalFileName, ext);
       const newFileName = `${baseName}.${version}${ext}`;
-      const headerComment = `/**
- * DoltStore - A lightweight JavaScript library for building offline-first applications
+      const headerComment = `/*!
+ * Dolt Labs DBStore - A lightweight JavaScript library for building offline-first applications
  * Version: ${version}
  * File: ${newFileName}
  */
@@ -48,9 +47,9 @@ function updateHeaderAndRename() {
 export default {
   input: 'src/index.js',  // Adjust this to your entry file
   output: {
-    file: 'dist/doltstore.js',  // Initial output file location
+    file: 'dist/doltlabs-dbstore.js',  // Initial output file location
     format: 'umd',  // UMD format for a single bundle (Universal Module Definition)
-    name: 'DoltStore',  // The global variable name for your library
+    name: 'DoltDBStore',  // The global variable name for your library
   },
   plugins: [
     resolve(),  // Resolves node_modules

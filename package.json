@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "rollup -c",
-    "minify": "terser dist/doltstore*.js -o dist/doltstore.min.js",
+    "minify": "terser --comments \"/^!/\" dist/doltlabs*.js -o dist/doltlabs-dbstore.min.js",
     "test": "jest"
   },
   "keywords": [

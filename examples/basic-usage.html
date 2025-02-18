@@ -1,77 +1,131 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Basic Usage - DoltStore</title>
-  <script src="../dist/doltstore.min.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Todo List</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
+
 <body>
+  <div class="container">
+    <h1 class="my-3">Todo List</h1>
 
-  <h1>Basic Usage Example</h1>
+    <div class="input-group mb-3">
+      <input class="form-control" type="text" id="taskInput" placeholder="Enter a task">
+      <button class="btn btn-primary" onclick="addTask()">Add Task</button>
+    </div>
 
-  <table id="todoTable" border="1">
-    <thead>
-      <tr>
-        <th>Task</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Rows will be added here dynamically -->
-    </tbody>
-  </table>
+    <table class="table" id="todoTable">
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Rows will be added dynamically -->
+      </tbody>
+    </table>
+  </div>
 
-  <input type="text" id="taskInput" placeholder="Enter a task">
-  <button onclick="addTask()">Add Task</button>
+  <script src="../dist/doltlabs-dbstore.min.js"></script>
 
   <script>
-    // Initialize DoltStore with the "tasks" schema
-    const taskDb = new DoltStore('tasks');
 
-    // Function to add a task
+    class Task {
+      constructor(title, description = "", status = "todo", dueDate = null) {
+        this.title = title;
+        this.description = description;
+        this.status = status; // todo, in-progress, completed
+        this.dueDate = dueDate;
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+      }
+
+      updateStatus(newStatus) {
+        this.status = newStatus;
+        this.updatedAt = new Date();
+      }
+    }
+
+    // Initialize DoltStore
+    const taskDb = new DoltDBStore('tasks');
+
+    // Function to add a new task
     function addTask() {
       const taskInput = document.getElementById('taskInput');
-      const task = taskInput.value.trim();
-      if (task) {
-        const taskId = Date.now().toString();
-        taskDb.save({ id: taskId, task });
-        addTaskToTable(taskId, task);
+      const title = taskInput.value.trim();
+
+      if (title) {
+        const task = new Task(title);
+        const savedTask = taskDb.save(task); // Get the saved task with an ID
+        addTaskToTable(savedTask); // Use savedTask instead of task
         taskInput.value = '';
       }
     }
 
+
     // Function to add a task to the table
-    function addTaskToTable(taskId, task) {
+    function addTaskToTable(task) {
       const tableBody = document.getElementById('todoTable').getElementsByTagName('tbody')[0];
       const row = tableBody.insertRow();
-      row.setAttribute('data-task-id', taskId);
+      row.setAttribute('data-task-id', task.id);
 
       const cell1 = row.insertCell(0);
       const cell2 = row.insertCell(1);
+      const cell3 = row.insertCell(2);
 
-      cell1.textContent = task;
-      cell2.innerHTML = '<button onclick="deleteTask(this)">Delete</button>';
+      cell1.textContent = task.title;
+      cell2.textContent = task.status;
+      cell3.innerHTML = `
+        <button class="btn btn-warning btn-sm" onclick="updateTaskStatus('${task.id}', 'in-progress')">In Progress</button>
+        <button class="btn btn-success btn-sm" onclick="updateTaskStatus('${task.id}', 'done')">Complete</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteTask('${task.id}', this)">Delete</button>
+      `;
     }
 
     // Function to delete a task
-    function deleteTask(button) {
-      const row = button.parentNode.parentNode;
-      const taskId = row.getAttribute('data-task-id');
+    function deleteTask(taskId, button) {
       taskDb.delete(taskId);
-      row.remove();
+      button.closest('tr').remove();
     }
 
-    // Load existing tasks from DoltStore and display them
-    function loadTasks() {
+
+    // Function to update task status using updateStatus()
+    function updateTaskStatus(taskId, newStatus) {
+      let task = taskDb.get(taskId);
+      if (task) {
+        task = Object.assign(new Task(), task); // Ensure task is an instance of Task
+        task.updateStatus(newStatus);
+        taskDb.update(taskId, task);
+        reloadTasks();
+      }
+    }
+
+    // Function to reload tasks
+    function reloadTasks() {
+      const tableBody = document.getElementById('todoTable').getElementsByTagName('tbody')[0];
+      tableBody.innerHTML = ''; // Clear table
       const tasks = taskDb.getAll();
       tasks.forEach(task => {
-        addTaskToTable(task.id, task.task);
+        addTaskToTable(task);
       });
     }
 
     // Load tasks when the page loads
-    window.onload = loadTasks;
+    window.onload = reloadTasks;
   </script>
 
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+
+
 </body>
+
 </html>

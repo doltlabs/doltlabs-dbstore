@@ -5,8 +5,8 @@ import { StorageWrapper } from './core';
  * @param {string} schemaName - The name of the schema (used for localStorage)
  * @returns {StorageWrapper} The storage wrapper instance
  */
-function DoltStore(schemaName) {
+function DoltDBStore(schemaName) {
   return new StorageWrapper(schemaName);
 }
 
-export default DoltStore;
+export default DoltDBStore;
