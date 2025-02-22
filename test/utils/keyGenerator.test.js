@@ -1,4 +1,4 @@
-import { generateId } from '../src/utils/keyGenerator';
+import { generateId } from "../../src/utils";
 
 test('generateId() generates a valid ID', () => {
   const id = generateId();

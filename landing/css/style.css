@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+body {
+    font-family: "Inter", serif !important;
+}
+
+.bg-dblue {
+ background-color: #0000FF !important;
+}
+
+.text-dblue {
+ color: #0000FF !important;
+}
+
+.btn-primary {
+    background-color: #0000FF !important;
+    border-color: #0000FF !important;
+    color: #ffffff !important;
+}
+
+.btn-outline-dblue:hover {
+    background-color: #0000DD !important;
+    border-color: #0000DD !important;
+    color: #ffffff !important;
+}
+
+.btn-outline-dblue {
+    color: #0000FF !important;
+    border-color: #0000FF !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-dblue:hover {
+    color: #ffffff;
+    background-color: #0000FF;
+    border-color: #0000FF;
+}
+
+.border-dblue {
+    border-color: #0000FF !important;
+}
+
+.link-dblue {
+    color: #0000FF;
+    text-decoration: none;
+}
+
+.link-dblue:hover {
+    color: #0000DD;
+    text-decoration: underline;
+}

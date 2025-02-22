@@ -1,4 +1,4 @@
-import { serialize, deserialize } from "../src/utils";
+import { serialize, deserialize } from "../../src/utils";
 
 describe('Serializer', () => {
   const testObject = { name: 'test', value: 123, nested: { foo: 'bar' } };

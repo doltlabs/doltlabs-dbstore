@@ -28,8 +28,6 @@ class StorageWrapper {
   }
 
 
-
-
   /**
    * Retrieves a data entry by its ID
    * @param {string} id - The unique ID of the entry
@@ -37,7 +35,8 @@ class StorageWrapper {
    */
   get(id) {
     const storedData = this.getAll();
-    return storedData ? storedData.find(item => item.id === id) : null;
+    const found = storedData?.find(item => item.id === id);
+    return found ?? null;
   }
 
   /**

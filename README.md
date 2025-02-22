@@ -1,245 +1,230 @@
 # Dolt Labs dbStore - Offline-First Key-Value Database Wrapper
 
-**dbStore** is a lightweight and powerful JavaScript library for building offline-first applications. It provides an easy-to-use key-value database wrapper that connects to the browser's `localStorage` and supports automatic ID generation based on JavaScript class schemas. This makes it easy to store and manage data, even when users are offline, and access it across sessions.
+**dbStore** is a lightweight JavaScript library that provides a wrapper around browser's `localStorage` for offline-first applications. It offers CRUD operations with automatic ID generation and JSON serialization.
 
 ### Features
 
-- **Offline-First**: Persistent data storage in the browser, even without an internet connection.
-- **Simple API**: Provides an easy-to-use interface for storing, retrieving, updating, and deleting data.
-- **Automatic ID Generation**: Automatically generates unique IDs for data entries based on a JavaScript class schema.
-- **Key-Value Database**: Leverages the built-in `localStorage` for simple key-value data storage.
-- **Lightweight**: Minimalist library with no dependencies, designed for speed and simplicity.
-
----
+- **Offline-First**: Persistent browser storage using `localStorage`
+- **Simple API**: Basic CRUD operations with minimal setup
+- **Automatic ID Generation**: Built-in unique ID generation for data entries
+- **JSON Serialization**: Automatic object serialization/deserialization for complex data types
+- **Zero Dependencies**: Lightweight and standalone implementation
+- **Type Safety**: Optional TypeScript support
+- **Error Handling**: Comprehensive error handling and validation
 
 ## Installation
 
-### Using CDN
-
-You can include **dbStore** in your project by adding the following `<script>` tag to your HTML file:
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/doltdbStore@1.0.0/dist/doltdbStore.js"></script>
-```
-
-### Using npm
-
-To install **dbStore** via npm, run:
-
 ```bash
-npm install doltvault
+# Using npm
+npm install dolt-dbstore
+
+# Using yarn
+yarn add dolt-dbstore
+
+# Using pnpm
+pnpm add dolt-dbstore
 ```
-
-Then, you can import it into your JavaScript project:
-
-```javascript
-import DoltDbStore from 'doltdbStore';
-```
-
----
-
-## How It Works
-
-**dbStore** interacts with the browser's `localStorage` to store data in a key-value format. It uses **JavaScript classes** to define the schema for your data and automatically generates a unique ID for each instance of that class when saved.
-
-### Key Concepts
-
-1. **Schema Class**: A JavaScript class that defines the structure of the data.
-2. **Storage**: Data is stored in `localStorage`, indexed by an automatically generated or user-defined key.
-3. **CRUD Operations**: You can Create, Read, Update, and Delete entries in the storage.
-
----
 
 ## Usage
 
-### 1. Defining a Schema Class
-
-First, define a JavaScript class to represent the data structure you want to store. For example, let's create a `User` class with properties like `username`, `email`, and `fullName`.
-
 ```javascript
-class User {
-  constructor(username, email, fullName) {
-    this.username = username;
-    this.email = email;
-    this.fullName = fullName;
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
-  }
-}
+import DoltDBStore from 'dolt-dbstore';
+
+// Initialize store with a schema name
+const store = new DoltDBStore('users');
+
+// Create
+const user = store.save({ 
+  name: 'John Doe', 
+  email: 'john@example.com',
+  createdAt: new Date()
+});
+
+// Read
+const foundUser = store.get(user.id);
+
+// Update
+const updatedUser = store.update(user.id, { 
+  name: 'Jane Doe',
+  updatedAt: new Date()
+});
+
+// Delete
+const isDeleted = store.delete(user.id);
+
+// Get all entries
+const allUsers = store.getAll();
+
+// Advanced usage
+const filteredUsers = store.getAll().filter(user => user.name.includes('John'));
 ```
-
-### 2. Initializing dbStore
-
-Next, initialize **dbStore** with a unique schema name. This will represent the storage collection for the data.
-
-```javascript
-const userDb = new DoltDbStore('users');
-```
-
-### 3. Saving Data
-
-Now, you can create a new user and save it to the `localStorage`.
-
-```javascript
-const user = new User('john_doe', 'john@example.com', 'John Doe');
-
-// Save the user to localStorage
-userDb.save(user);
-```
-
-By default, **DoltVault** will automatically generate a unique ID for the `User` object if you don't provide one. This ID is stored in `localStorage` along with the data.
-
-### 4. Retrieving Data
-
-You can retrieve a specific user by their unique ID:
-
-```javascript
-const retrievedUser = userDb.get(user.id);
-console.log(retrievedUser);
-```
-
-### 5. Updating Data
-
-To update a user's data, you can simply modify the object and save it again:
-
-```javascript
-user.fullName = 'Johnathan Doe';
-user.updatedAt = new Date();
-
-// Update the user in localStorage
-userDb.update(user.id, user);
-```
-
-### 6. Deleting Data
-
-To delete a user from the storage, use the `delete` method:
-
-```javascript
-userDb.delete(user.id);
-```
-
-### 7. Listing All Entries
-
-To retrieve all the stored entries in the database, use:
-
-```javascript
-const allUsers = userDb.getAll();
-console.log(allUsers);
-```
-
----
 
 ## API Reference
 
-### 1. **`DoltDbStore` Constructor**
+### DoltDBStore(schemaName, options?)
+- `schemaName` (string): Unique identifier for the storage collection
+- `options` (Object): Optional configuration
+  - `prefix` (string): Storage key prefix
+  - `serializer` (Function): Custom serialization function
+  - `deserializer` (Function): Custom deserialization function
 
-```javascript
-const db = new DoltDbStore(schemaName);
+### Methods
+
+#### save(data)
+Stores data with an automatically generated ID.
+- `data` (Object): Data to store
+- Returns: `Object` - Stored object with generated ID
+- Throws: `ValidationError` if data is invalid
+
+#### get(id)
+Retrieves a single entry by ID.
+- `id` (string): Entry ID
+- Returns: `Object | null` - Found entry or null
+- Throws: `TypeError` if ID is invalid
+
+#### update(id, newData)
+Updates an existing entry.
+- `id` (string): Entry ID
+- `newData` (Object): Updated data
+- Returns: `Object | null` - Updated entry or null
+- Throws: `ValidationError` if data is invalid
+
+#### delete(id)
+Removes an entry by ID.
+- `id` (string): Entry ID
+- Returns: `boolean` - Success status
+- Throws: `TypeError` if ID is invalid
+
+#### getAll()
+Retrieves all entries.
+- Returns: `Array<Object>` - Array of all entries
+- Note: Returns empty array if no entries exist
+
+## Development Guide
+
+### Project Structure
+
+```
+src/
+├── core/
+│   ├── storageWrapper.js     # LocalStorage implementation
+│   └── index.js             # Core exports and types
+├── utils/
+│   ├── keyGenerator.js      # UUID generation utility
+│   ├── serializer.js        # JSON serialization handlers
+│   └── index.js            # Utils exports
+├── types/
+│   └── index.d.ts          # TypeScript definitions
+└── index.js                # Main entry point
 ```
 
-- **Parameters**:
-  - `schemaName` (String): The name of the schema (used to identify the data in `localStorage`).
+### Building
 
-### 2. **`save(data)`**
-
-```javascript
-db.save(data);
+1. Install dependencies:
+```bash
+npm install
 ```
 
-- **Parameters**:
-  - `data` (Object): The data object to save. It must be an instance of the schema class.
-  
-- **Returns**: The saved object, with an `id` property assigned (if not already provided).
-
-- **Description**: Saves a new data entry to `localStorage`. If no `id` is provided, it generates one based on the schema class.
-
-### 3. **`get(id)`**
-
-```javascript
-const data = db.get(id);
+2. Build for development:
+```bash
+npm run dev
 ```
 
-- **Parameters**:
-  - `id` (String): The unique ID of the entry to retrieve.
-
-- **Returns**: The data object corresponding to the ID.
-
-- **Description**: Retrieves an entry by its unique ID.
-
-### 4. **`update(id, data)`**
-
-```javascript
-db.update(id, data);
+3. Build for production:
+```bash
+npm run build
 ```
 
-- **Parameters**:
-  - `id` (String): The unique ID of the entry to update.
-  - `data` (Object): The updated data object.
+### Testing
 
-- **Returns**: The updated data object.
+```bash
+# Run unit tests
+npm test
 
-- **Description**: Updates an existing data entry.
+# Run with coverage
+npm run test:coverage
 
-### 5. **`delete(id)`**
+# Run in watch mode
+npm run test:watch
 
-```javascript
-db.delete(id);
+# Run specific test file
+npm test -- path/to/test
 ```
 
-- **Parameters**:
-  - `id` (String): The unique ID of the entry to delete.
+### Coding Guidelines
 
-- **Returns**: `undefined`.
+1. **Code Style**
+   - Follow airbnb-base style guide
+   - Use 2 spaces for indentation
+   - Max line length: 80 characters
 
-- **Description**: Deletes an entry from the database.
+2. **Documentation**
+   - Write JSDoc comments for all public functions
+   - Include examples in documentation
+   - Document error cases and edge scenarios
 
-### 6. **`getAll()`**
+3. **Testing**
+   - Maintain >90% test coverage
+   - Write unit tests for all features
+   - Include edge cases in tests
 
-```javascript
-const data = db.getAll();
+4. **Git Workflow**
+   - Use semantic commit messages
+   - Branch naming: feature/, bugfix/, hotfix/
+   - Squash commits before merging
+
+### Publishing
+
+1. Prepare for release
+```bash
+# Update version
+npm version [major|minor|patch]
+
+# Run tests
+npm test
+
+# Build project
+npm run build
 ```
 
-- **Returns**: An array of all data entries stored in `localStorage`.
+2. Publishing process
+```bash
+# Login to npm
+npm login
 
-- **Description**: Retrieves all entries from the database.
+# Publish package
+npm publish
 
----
-
-## Advanced Usage
-
-### Storing More Complex Objects
-
-You can store more complex objects in **DoltDbStore** by defining multiple schema classes and using them together:
-
-```javascript
-class Post {
-  constructor(title, content, author) {
-    this.title = title;
-    this.content = content;
-    this.author = author; // Reference to a User object
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
-  }
-}
+# Create git tag
+git tag v$(node -p "require('./package.json').version")
+git push origin --tags
 ```
 
-You can save and link a `Post` object to a `User` object:
-
-```javascript
-const post = new Post('My First Post', 'This is the content of the post.', user);
-userDb.save(user);
-const postDb = new DoltDbStore('posts');
-postDb.save(post);
-```
-
----
+3. Post-release
+   - Update changelog
+   - Create GitHub release
+   - Update documentation
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - See LICENSE file for details
 
----
+## Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
 
 ## Support
 
-For support, please feel free to open an issue on our [GitHub Issues Page]([https://github.com/DoltLabs/doltvault](https://github.com/doltlabs/dolt-dbstore/issues) or reach out via email at **contactus@doltlabs.in**.
+- GitHub Issues: [dolt-dbstore/issues](https://github.com/doltlabs/dolt-dbstore/issues)
+- Email: contactus@doltlabs.in
+- Documentation: [dolt-dbstore/docs](https://github.com/doltlabs/dolt-dbstore/docs)
+
+## Security
+
+- Report security issues via email: security@doltlabs.in
+- Follow responsible disclosure guidelines
+- Regular security audits conducted
