@@ -1,9 +1,10 @@
 {
-  "name": "dolt-store",
+  "name": "@doltlabs/doltlabs-dbstore",
   "version": "1.0.0",
   "description": "A lightweight JavaScript library for building offline-first applications using a key-value database wrapper for Chrome localStorage.",
   "main": "src/index.js",
   "type": "module",
+  "files": ["dist/**"],
   "scripts": {
     "build": "rollup -c",
     "minify": "terser --comments \"/^!/\" dist/doltlabs*.js -o dist/doltlabs-dbstore.min.js",
